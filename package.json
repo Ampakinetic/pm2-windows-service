@@ -5,17 +5,17 @@
   "author": "Mark Lagendijk <mark@lagendijk.info>",
   "license": "MIT",
   "dependencies": {
-    "start-on-windows-boot": "^1.0.0",
+    "os-service": "^1.0.0",
     "yargs": "^3.15.0"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/marklagendijk/node-pm2-windows-startup"
+    "url": "https://github.com/Ampakinetic/pm2-windows-service"
   },
   "bugs": {
-    "url": "https://github.com/marklagendijk/node-pm2-windows-startup/issues"
+    "url": "https://github.com/Ampakinetic/pm2-windows-service/issues"
   },
-  "homepage": "https://github.com/marklagendijk/node-pm2-windows-startup",
+  "homepage": "http://ampakinetic.github.io/pm2-windows-service",
   "preferGlobal": true,
   "bin": {
     "pm2-startup": "index.js"

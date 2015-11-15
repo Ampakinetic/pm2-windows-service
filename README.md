@@ -1,10 +1,10 @@
-# pm2-windows-startup
-Utility to make [PM2](https://github.com/Unitech/PM2) automatically resurrect on Windows startup. The utility achieves this by adding the right registry entry, using [start-on-windows-boot](https://github.com/marklagendijk/node-start-on-windows-boot).
+# pm2-windows-service
+Utility to make [PM2](https://github.com/Unitech/PM2) automatically resurrect on Windows startup. The utility achieves this by adding a service to windows.
 
 ## Installation and usage
+> npm install pm2-windows-service -g
 ``` bash
-> npm install pm2-windows-startup -g
-> pm2-startup install
+> pm2-service --add
 ```
 
 

@@ -1,46 +1,38 @@
-#!/usr/bin/env node
+"use strict";
 
-var startOnBoot = require('start-on-windows-boot');
-var argv = require('yargs')
-    .usage('Usage: pm2-startup <command>')
-    .command('install', 'Adds a registry entry which resurrects PM2 on startup.')
-    .command('uninstall', 'Removes the registry entry which resurrects PM2 on startup.')
-    .demand(1)
-    .argv
-    ._;
+var service = require('os-service');
 
-var applicationName = 'PM2';
-var applicationCommand = 'wscript.exe "' + __dirname + '\\invisible.vbs" "' + __dirname + '\\pm2_resurrect.cmd"';
-
-switch (argv[0]) {
-    case 'install':
-        enablePm2Startup();
-        break;
-
-    case 'uninstall':
-        removePm2Startup();
-        break;
-}
-
-
-function enablePm2Startup() {
-    startOnBoot.enableAutoStart(applicationName, applicationCommand, function (error) {
-        if (error) {
-            console.log('Error while trying to add PM2 startup registry entry: ' + error);
-        }
-        else {
-            console.log('Successfully added PM2 startup registry entry.');
-        }
+if (process.argv[2] == "--add") {
+    service.add ("Node.JS Process Manager (PM2) Service", {programArgs: ["--run"]}, function(error){ 
+       if (error)
+          console.trace(error);
     });
-}
+} else if (process.argv[2] == "--remove") {
+    service.remove ("Node.JS Process Manager (PM2) Service", function(error){ 
+       if (error)
+          console.trace(error);
+    }););
+} else if (process.argv[2] == "--run") {
+    var logStream = fs.createWriteStream (process.argv[1] + ".log");
 
-function removePm2Startup() {
-    startOnBoot.disableAutoStart(applicationName, function (error) {
-        if (error) {
-            console.log('Error while trying to remove PM2 startup registry entry: ' + error);
-        }
-        else {
-            console.log('Successfully removed PM2 startup registry entry.');
-        }
+    service.run (logStream, function () {
+        service.stop (0);
     });
+
+    var spawn = require('child_process').spawn,
+		ls    = spawn('cmd.exe', ['/c', 'pm2 resurrect']);
+		
+		ls.stdout.on('data', function (data) {
+		console.log('stdout: ' + data);
+		});
+		
+		ls.stderr.on('data', function (data) {
+		console.log('stderr: ' + data);
+		});
+		
+		ls.on('exit', function (code) {
+		console.log('child process exited with code ' + code);
+		});
+} else {
+    // Show usage...
 }
